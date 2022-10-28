@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Node
+{
+	int vertex;
+	struct Node *next;
+	
+}node;
+
+node *G[20];
+int visited[20];
+int n;
+
+void readgraph();
+void insert(int,int);
+void DFS(int);
+
+int main()
+{
+	int i;
+	readgraph();
+	for(i=0;i<n;i++)
+		visited[i]=0;
+	DFS(0);
+return 0;
+}
+
+void DFS(int i)
+{
+	if(visited[i])
+		return;
+	node *p;
+	printf("%d->",i);
+	p=G[i];
+	visited[i]=1;
+	while(p!=NULL)
+	{
+		i=p->vertex;
+		if(!visited[i])
+			DFS(i);
+		p=p->next;
+	}
+}
+
+void readgraph()
+{
+	int i,j,vi,vj,n,count=0;
+	char ch[20],chr,chr1[20];
+	FILE *fp;
+	printf("\nEnter the number of verticse:");
+	scanf("%d",&n);
+	printf("\nEnter the file name:\n");
+	scanf("%s",ch);
+	fp=fopen(ch,"r+");
+	while(fscanf(fp,"%s",chr1)!=EOF)
+	{
+		count++;
+		vi=chr1[0]-'0';
+		vj=chr1[1]-'0';
+		insert(vi,vj);
+	}
+	fclose(fp);
+	printf("Number of edges =%d\n",count);
+}
+
+void insert(int vi,int vj)
+{
+	node *p,*q;
+	q=(node*)malloc(sizeof(node));
+	q->vertex=vj;
+	q->next=NULL;
+	if(G[vi]==NULL)
+		G[vi]=q;
+	else
+	{
+		p=G[vi];
+		while(p->next!=NULL)
+			p=p->next;
+		p->next=q;
+	}
+}
